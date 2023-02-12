@@ -12,6 +12,9 @@ function App() {
     setLoading(true);
     try {
       setError(null);
+      setDataArea(null);
+      setDataCategory(null);
+      setDataSearched(null);
       const response = await fetch(`https://themealdb.com/api/json/v1/1/search.php?s=${query}`);
       const json = await response.json();
       const searchedMeal=json.meals[0];
