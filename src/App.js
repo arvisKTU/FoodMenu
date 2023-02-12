@@ -11,20 +11,22 @@ function App() {
   const handleClick = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`http://themealdb.com/api/json/v1/1/search.php?s=${query}`);
+      setError(null);
+      const response = await fetch(`https://themealdb.com/api/json/v1/1/search.php?s=${query}`);
       const json = await response.json();
       const searchedMeal=json.meals[0];
       setDataSearched(searchedMeal);
-      const response1 = await fetch(`http://themealdb.com/api/json/v1/1/filter.php?c=${searchedMeal.strCategory}`);
+      const response1 = await fetch(`https://themealdb.com/api/json/v1/1/filter.php?c=${searchedMeal.strCategory}`);
       const json1 = await response1.json();
       const filterCategory=json1.meals.filter(item => !item.strMeal.includes(searchedMeal.strMeal));
       setDataCategory(filterCategory);
-      const response2 = await fetch(`http://themealdb.com/api/json/v1/1/filter.php?a=${searchedMeal.strArea}`);
+      const response2 = await fetch(`https://themealdb.com/api/json/v1/1/filter.php?a=${searchedMeal.strArea}`);
       const json2 = await response2.json();
       const filterArea=json2.meals.filter(item => !item.strMeal.includes(searchedMeal.strMeal));
       setDataArea(filterArea);
     } catch (error) {
       setError(error);
+      error.message="Meal not found";
     } finally {
       setLoading(false);
     }
@@ -59,19 +61,18 @@ function App() {
           )}
         </tbody>
       </table>
-      <h1>Similiar meals by Category</h1>
+      <h1>Similar meals by Category</h1>
       <table>
         <thead>
         </thead>
         <tbody>
           {dataCategory &&
             dataCategory.slice(0,5).map((item, index) => {
-              const { strMeal, strCategory,strArea } = item;
+              const { strMeal} = item;
               return (
                 <tr key={index}>
                   <td>{strMeal}</td>
-                  <td>{strCategory}</td>
-                  <td>{strArea}</td>
+
                 </tr>
               );
             })}
@@ -83,19 +84,17 @@ function App() {
         </tbody>
       </table>
 
-      <h1>Similiar meals by Area</h1>
+      <h1>Similar meals by Area</h1>
       <table>
         <thead>
         </thead>
         <tbody>
           {dataArea &&
             dataArea.slice(0,3).map((item, index) => {
-              const { strMeal, strCategory,strArea } = item;
+              const { strMeal} = item;
               return (
                 <tr key={index}>
                   <td>{strMeal}</td>
-                  <td>{strCategory}</td>
-                  <td>{strArea}</td>
                 </tr>
               );
             })}
